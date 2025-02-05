@@ -1,3 +1,25 @@
+import { default as axios } from "axios";
+
+// Main CLI logic
+const username = process.argv[2];
+if (!username) {
+  console.error("Please provide a GitHub username.");
+  process.exit(1);
+}
+
+async function dataFetching(username) {
+  try {
+    const response = await axios.get(
+      `https://api.github.com/users/${username}/events`
+    );
+    return response.data;
+  } catch (error) {
+    console.error(error);
+  }
+}
+
+dataFetching(username);
+
 async function fetchGitHubActivity(username) {
   const response = await fetch(
     `https://api.github.com/users/${username}/events`,
@@ -5,7 +27,7 @@ async function fetchGitHubActivity(username) {
       headers: {
         "User-Agent": "node.js",
       },
-    },
+    }
   );
 
   if (!response.ok) {
@@ -34,7 +56,10 @@ function displayActivity(events) {
         action = `Pushed ${commitCount} commit(s) to ${event.repo.name}`;
         break;
       case "IssuesEvent":
-        action = `${event.payload.action.charAt(0).toUpperCase() + event.payload.action.slice(1)} an issue in ${event.repo.name}`;
+        action = `${
+          event.payload.action.charAt(0).toUpperCase() +
+          event.payload.action.slice(1)
+        } an issue in ${event.repo.name}`;
         break;
       case "WatchEvent":
         action = `Starred ${event.repo.name}`;
@@ -53,18 +78,10 @@ function displayActivity(events) {
   });
 }
 
-// Main CLI logic
-const username = process.argv[2];
-if (!username) {
-  console.error("Please provide a GitHub username.");
-  process.exit(1);
-}
-
-fetchGitHubActivity(username)
-  .then((events) => {
-    displayActivity(events);
+dataFetching(username)
+  .then((response) => {
+    displayActivity(response);
   })
   .catch((err) => {
-    console.error("Hello",err.message);
-    process.exit(1);
+    console.log(err);
   });
