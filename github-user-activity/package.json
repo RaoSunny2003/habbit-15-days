@@ -1,0 +1,12 @@
+{
+  "name": "github-user-activity",
+  "version": "1.0.0",
+  "description": "This is a simple Github CLI Activity Tracker",
+  "license": "ISC",
+  "author": "Rao Sunny N.",
+  "type": "module",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  }
+}
